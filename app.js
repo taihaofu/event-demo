@@ -1,60 +1,16 @@
-
-// var express = require('express');
-
-// var createError = require('http-errors');
-// var express = require('express');
-// var path = require('path');
-// var cookieParser = require('cookie-parser');
-// var logger = require('morgan');
-
-// var indexRouter = require('./routes/index');
-// var usersRouter = require('./routes/users');
-
-// var app = express();
-
-// // view engine setup
-// app.set('views', path.join(__dirname, 'views'));
-// app.set('view engine', 'jade');
-
-// app.use(logger('dev'));
-// app.use(express.json());
-// app.use(express.urlencoded({ extended: false }));
-// app.use(cookieParser());
-// app.use(express.static(path.join(__dirname, 'public')));
-
-// app.use('/', indexRouter);
-// app.use('/users', usersRouter);
-
-// // catch 404 and forward to error handler
-// app.use(function(req, res, next) {
-//   next(createError(404));
-// });
-
-// // error handler
-// app.use(function(err, req, res, next) {
-//   // set locals, only providing error in development
-//   res.locals.message = err.message;
-//   res.locals.error = req.app.get('env') === 'development' ? err : {};
-// // sideEventListener();
-
-//   // render the error page
-//   res.status(err.status || 500);
-//   res.render('error');
-// });
-
-// // module.exports = app;
-
-// const Tronweb = require('tronweb');
-// const Sunweb = require('sunweb');
+var express = require('express');
+var app = express();
+const TronWeb = require('tronweb');
+const SunWeb = require('sunweb');
 
 const privatekey = '7306c6044ad7c03709980aa188b8555288b7e0608f5edbf76ff2381c5a7a15a8';
 
-// const tronweb = new Tronweb({
-//     fullHost: 'https://api.trongrid.io',
-//     privateKey: privatekey
-// });
+const tronweb = new TronWeb({
+    fullHost: 'https://api.trongrid.io',
+    privateKey: privatekey
+});
 
-const mainchain = new window.TronWeb( {
+const mainchain = new TronWeb( {
     fullNode: 'https://api.trongrid.io',
     solidityNode: 'https://api.trongrid.io',
     eventServer: 'https://api.trongrid.io',
@@ -80,13 +36,13 @@ const mainchain = new window.TronWeb( {
 // });
 
 
-const sidechain = new window.TronWeb({
+const sidechain = new TronWeb({
   fullNode: 'https://suntest.tronex.io',
   solidityNode: 'https://suntest.tronex.io',
   eventServer: 'https://suntest.tronex.io/event',
   privateKey: privatekey
 })
-const sunweb = new window.SunWeb(
+const sunweb = new SunWeb(
 mainchain,
 sidechain,
 'TFLtPoEtVJBMcj6kZPrQrwEdM3W3shxsBU',
@@ -135,13 +91,13 @@ let sideEventListener = ()=>{
     console.log("sidechain heartbeat")
     // console.log(test0114);
     test0114["CountEvent(address,uint256)"]().watch((err, event) => {
-      // if (err) return console.error('Error with "method" event:', err);
-      // if (event) { // some function
-      //   console.log("side chain event begin:");
-      //   console.log(event);
-      //   console.log("side chain event end");
-      //   console.log();
-      // }
+      if (err) return console.error('Error with "method" event:', err);
+      if (event) { // some function
+        console.log("side chain event begin:");
+        console.log(event);
+        console.log("side chain event end");
+        console.log();
+      }
     });
   }
   catch(err){
@@ -151,3 +107,4 @@ let sideEventListener = ()=>{
 }
 
 sideEventListener();
+module.exports = app;
