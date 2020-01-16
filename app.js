@@ -62,28 +62,28 @@ const test0114 = sunweb.sidechain.contract([{"constant":false,"inputs":[],"name"
 // const mainTest0114 = tronweb.contract([{"constant":false,"inputs":[],"name":"hello","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":false,"name":"_value","type":"uint256"}],"name":"CountEvent","type":"event"}],'TLWHbu4BBaJEwCGUyQQHiqQguYB9tsi8Mo');
 
 
-// let mainEventListener = ()=>{
-//   wink["Transfer(address,address,uint256)"]().watch((err, event) => {
-//     if (err) return console.error('Error with "method" event:', err);
-//     if (event) { // some function
-//       console.log("main chain event begin:");
-//       console.log(event);
-//       console.log("main chain event end");
-//       console.log();
-//     }
-//   });
-//   // mainTest0114["CountEvent(address,uint256)"]().watch((err, event) => {
-//   //   if (err) return console.error('Error with "method" event:', err);
-//   //   if (event) { // some function
-//   //     console.log("main chain event begin:");
-//   //     console.log(event);
-//   //     console.log("main chain event end");
-//   //     console.log();
-//   //   }
-//   // });
-// }
+let mainEventListener = ()=>{
+  wink["Transfer(address,address,uint256)"]().watch((err, event) => {
+    if (err) return console.error('Error with "method" event:', err);
+    if (event) { // some function
+      console.log("main chain event begin:");
+      console.log(event);
+      console.log("main chain event end");
+      console.log();
+    }
+  });
+  // mainTest0114["CountEvent(address,uint256)"]().watch((err, event) => {
+  //   if (err) return console.error('Error with "method" event:', err);
+  //   if (event) { // some function
+  //     console.log("main chain event begin:");
+  //     console.log(event);
+  //     console.log("main chain event end");
+  //     console.log();
+  //   }
+  // });
+}
 
-//mainEventListener();
+mainEventListener();
 
 // console.log(test0114)
 let sideEventListener = ()=>{
