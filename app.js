@@ -45,6 +45,9 @@ const tronMainnet =  new SunWeb(
  */
 
 let mainEventListener = ()=>{
+  console.log('**********')
+  console.log('mainchain listen task starts...\nautomatically listens to wink event')
+  console.log('**********')
   wink["Transfer(address,address,uint256)"]().watch((err, event) => {
     if (err) return console.error('Error with "method" event:', err);
     if (event) { // some function
@@ -75,7 +78,7 @@ mainEventListener();
 const tronexDappChain = new TronWeb({
   fullNode: 'https://suntest.tronex.io',
   solidityNode: 'https://suntest.tronex.io',
-  eventServer: 'https://suntest.tronex.io/event',
+  eventServer: 'https://suntest.tronex.io',
   privateKey: privatekey
 })
 const tronexTestnet = new SunWeb(
@@ -104,7 +107,10 @@ const test0114 = tronexTestnet.sidechain.contract([{"constant":false,"inputs":[]
 
 let sideEventListener = ()=>{
   try {
-    console.log("sidechain listen start...")
+    console.log('**********')
+    console.log('sidechain listen task starts...',
+    '\nPlease send transactions to trigger events for test using sun-cli cmd: triggercontract TGYpJsuRi8oTNEpNwyV5gVHHStoAUM7euA hello() # false 10000000 0 0 #')
+    console.log('**********')
     test0114["CountEvent(address,uint256)"]().watch((err, event) => {
       if (err) return console.error('Error with "method" event:', err);
       if (event) { // some function
@@ -116,10 +122,19 @@ let sideEventListener = ()=>{
     });
   }
   catch(err){
-    console.log(err, 'errrrrr')
+    console.log(err, 'err')
   }
   
 }
 
 sideEventListener();
+
+/**
+ *   3 Fullnode api test
+ */
+
+tronexTestnet.sidechain.trx.getChainParameters().then(
+  result=>console.log('\n**********Tronex fullnode api test getChainParameters() begin:**********\n', 
+  result, '\n**********Tronex fullnode api test getChainParameters() end.**********\n'))
+
 module.exports = app;
