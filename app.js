@@ -1,153 +1,161 @@
+var express = require('express');
+var app = express();
+const TronWeb = require('tronweb');
+const SunWeb = require('sunweb');
 
-// var express = require('express');
+// You don't need to give a privatekey for this demo, unless you want to send transactions.
+const privatekey = ''; 
 
-// var createError = require('http-errors');
-// var express = require('express');
-// var path = require('path');
-// var cookieParser = require('cookie-parser');
-// var logger = require('morgan');
+/**
+ *    ********* 1 TRON Mainnet ************
+ */
 
-// var indexRouter = require('./routes/index');
-// var usersRouter = require('./routes/users');
+/**
+ *   1.1 TRON Mainnet config
+ */
 
-// var app = express();
-
-// // view engine setup
-// app.set('views', path.join(__dirname, 'views'));
-// app.set('view engine', 'jade');
-
-// app.use(logger('dev'));
-// app.use(express.json());
-// app.use(express.urlencoded({ extended: false }));
-// app.use(cookieParser());
-// app.use(express.static(path.join(__dirname, 'public')));
-
-// app.use('/', indexRouter);
-// app.use('/users', usersRouter);
-
-// // catch 404 and forward to error handler
-// app.use(function(req, res, next) {
-//   next(createError(404));
-// });
-
-// // error handler
-// app.use(function(err, req, res, next) {
-//   // set locals, only providing error in development
-//   res.locals.message = err.message;
-//   res.locals.error = req.app.get('env') === 'development' ? err : {};
-// // sideEventListener();
-
-//   // render the error page
-//   res.status(err.status || 500);
-//   res.render('error');
-// });
-
-// // module.exports = app;
-
-// const Tronweb = require('tronweb');
-// const Sunweb = require('sunweb');
-
-const privatekey = '7306c6044ad7c03709980aa188b8555288b7e0608f5edbf76ff2381c5a7a15a8';
-
-// const tronweb = new Tronweb({
-//     fullHost: 'https://api.trongrid.io',
-//     privateKey: privatekey
-// });
-
-const mainchain = new window.TronWeb( {
+const tron = new TronWeb( {
     fullNode: 'https://api.trongrid.io',
     solidityNode: 'https://api.trongrid.io',
     eventServer: 'https://api.trongrid.io',
     privateKey: privatekey
 });
-// const sidechain = new Tronweb({
-//     fullNode: 'https://sun.tronex.io',
-//     solidityNode: 'https://sun.tronex.io',
-//     eventServer: 'https://sun.tronex.io/event',
-//     privateKey: privatekey
-// })
-// const sunweb = new Sunweb(
-//   mainchain,
-//   sidechain,
-//   'TWaPZru6PR5VjgT4sJrrZ481Zgp3iJ8Rfo',
-//   'TGKotco6YoULzbYisTBuP6DWXDjEgJSpYz',
-//   '41E209E4DE650F0150788E8EC5CAFA240A23EB8EB7'
-// );
 
-// const tronweb = new Tronweb({
-//   fullHost: 'https://api.trongrid.io',
-//   privateKey: privatekey
-// });
-
-
-const sidechain = new window.TronWeb({
-  fullNode: 'https://suntest.tronex.io',
-  solidityNode: 'https://suntest.tronex.io',
-  eventServer: 'https://suntest.tronex.io/event',
+const dappChain = new TronWeb({
+  fullNode: 'https://sun.tronex.io',
+  solidityNode: 'https://sun.tronex.io',
+  eventServer: 'https://sun.tronex.io',
   privateKey: privatekey
 })
-const sunweb = new window.SunWeb(
-mainchain,
-sidechain,
+
+const tronMainnet =  new SunWeb(
+  tron,
+  dappChain,
+  'TWaPZru6PR5VjgT4sJrrZ481Zgp3iJ8Rfo',
+  'TGKotco6YoULzbYisTBuP6DWXDjEgJSpYz',
+  '41E209E4DE650F0150788E8EC5CAFA240A23EB8EB7'
+)
+
+/**
+ *    1.2 Tron mainnet contract test. use wink contract as an example. Use SunWeb.
+ */
+
+ const wink = tronMainnet.mainchain.contract([{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"spender","type":"address"},{"name":"value","type":"uint256"}],"name":"approve","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"from","type":"address"},{"name":"to","type":"address"},{"name":"value","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"spender","type":"address"},{"name":"addedValue","type":"uint256"}],"name":"increaseAllowance","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"to","type":"address"},{"name":"value","type":"uint256"}],"name":"mint","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"value","type":"uint256"}],"name":"burn","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"from","type":"address"},{"name":"value","type":"uint256"}],"name":"burnFrom","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"account","type":"address"}],"name":"addMinter","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"renounceMinter","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"spender","type":"address"},{"name":"subtractedValue","type":"uint256"}],"name":"decreaseAllowance","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"to","type":"address"},{"name":"value","type":"uint256"}],"name":"transfer","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"account","type":"address"}],"name":"isMinter","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"owner","type":"address"},{"name":"spender","type":"address"}],"name":"allowance","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[{"name":"name","type":"string"},{"name":"symbol","type":"string"},{"name":"decimals","type":"uint8"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"account","type":"address"}],"name":"MinterAdded","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"account","type":"address"}],"name":"MinterRemoved","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"owner","type":"address"},{"indexed":true,"name":"spender","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Approval","type":"event"}],'TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7');
+
+/**
+ *  1.3 TRON Mainnet listener demo
+ */
+
+let mainEventListener = ()=>{
+  console.log('**********')
+  console.log('TRON mannet listen task starts...\nautomatically listens to wink event')
+  console.log('**********')
+  wink["Transfer(address,address,uint256)"]().watch((err, event) => {
+    if (err) return console.error('Error with "method" event:', err);
+    if (event) { // some function
+      console.log("TRON mannet event begin:");
+      console.log(event);
+      console.log("TRON mannet event end");
+      console.log();
+    }
+  });
+}
+
+mainEventListener();
+
+/**
+ *   NOTE: I didn't implement DAppChain listener on TRON Mainnet here. You should implement this sidechain
+ *   listener or dappchain listener yourself in your dappchain product evironment.
+ */
+
+const test0120 = tronMainnet.sidechain.contract([{"constant":false,"inputs":[],"name":"hello","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":false,"name":"_value","type":"uint256"}],"name":"CountEvent","type":"event"}],'TEkgV673Vzwk1s24F5iXXh8hsn5LQ1h7p8');
+
+let dappchainEventListener = ()=>{
+  console.log('**********')
+  console.log('dappchain listen task starts...\nPlease send transactions to trigger events for test using sun-cli cmd: triggercontract TEkgV673Vzwk1s24F5iXXh8hsn5LQ1h7p8 hello() # false 10000000 0 0 #')
+  console.log('ATTENTION: REAL TRX IS REQUIRED WITH THIS CMD!!!!')
+  console.log('**********')
+  test0120["CountEvent(address,uint256)"]().watch((err, event) => {
+    if (err) return console.error('Error with "method" event:', err);
+    if (event) { // some function
+      console.log("dappchain mainnet event begin:");
+      console.log(event);
+      console.log("dappchain mainnet event end");
+      console.log();
+    }
+  });
+}
+
+dappchainEventListener();
+
+
+/**
+ *    ********* 2 Tronex testnet ********* 
+ *    Below are testnet!!!!! Should only be used as test environment. I didn't implement
+ */
+
+ /**
+  *  2.1 Tronex testnet config
+  */
+const tronexDappChain = new TronWeb({
+  fullNode: 'https://suntest.tronex.io',
+  solidityNode: 'https://suntest.tronex.io',
+  eventServer: 'https://suntest.tronex.io',
+  privateKey: privatekey
+})
+const tronexTestnet = new SunWeb(
+  tron,// need to change
+tronexDappChain,
 'TFLtPoEtVJBMcj6kZPrQrwEdM3W3shxsBU',
 'TRDepx5KoQ8oNbFVZ5sogwUxtdYmATDRgX',
 '413AF23F37DA0D48234FDD43D89931E98E1144481B'
 );
 
-// var app = express();
+/**
+ *    2.2 Tronex testnet dappchain contract. Use SunWeb.
+ *    trigger contract by use command in sun-cli: 
+ *    triggercontract TGYpJsuRi8oTNEpNwyV5gVHHStoAUM7euA hello() # false 10000000 0 0 #
+ */
 
-const wink = sunweb.mainchain.contract([{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"spender","type":"address"},{"name":"value","type":"uint256"}],"name":"approve","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"from","type":"address"},{"name":"to","type":"address"},{"name":"value","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"spender","type":"address"},{"name":"addedValue","type":"uint256"}],"name":"increaseAllowance","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"to","type":"address"},{"name":"value","type":"uint256"}],"name":"mint","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"value","type":"uint256"}],"name":"burn","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"from","type":"address"},{"name":"value","type":"uint256"}],"name":"burnFrom","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"account","type":"address"}],"name":"addMinter","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"renounceMinter","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"spender","type":"address"},{"name":"subtractedValue","type":"uint256"}],"name":"decreaseAllowance","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"to","type":"address"},{"name":"value","type":"uint256"}],"name":"transfer","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"account","type":"address"}],"name":"isMinter","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"owner","type":"address"},{"name":"spender","type":"address"}],"name":"allowance","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[{"name":"name","type":"string"},{"name":"symbol","type":"string"},{"name":"decimals","type":"uint8"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"account","type":"address"}],"name":"MinterAdded","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"account","type":"address"}],"name":"MinterRemoved","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"owner","type":"address"},{"indexed":true,"name":"spender","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Approval","type":"event"}],'TLa2f6VPqDgRE67v1736s7bJ8Ray5wYjU7');
-// console.log(wink);
-
-const test0114 = sunweb.sidechain.contract([{"constant":false,"inputs":[],"name":"hello","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":false,"name":"_value","type":"uint256"}],"name":"CountEvent","type":"event"}],'TGYpJsuRi8oTNEpNwyV5gVHHStoAUM7euA');
+const test0114 = tronexTestnet.sidechain.contract([{"constant":false,"inputs":[],"name":"hello","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":false,"name":"_value","type":"uint256"}],"name":"CountEvent","type":"event"}],'TGYpJsuRi8oTNEpNwyV5gVHHStoAUM7euA');
 //TNbft6FbEKNZSfvEhVtcfdwKFneVmgga7V  mainnet sunnetwork test contract
 //TGYpJsuRi8oTNEpNwyV5gVHHStoAUM7euA  tronex sunnetwork test contract
 
-// const mainTest0114 = tronweb.contract([{"constant":false,"inputs":[],"name":"hello","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":false,"name":"_value","type":"uint256"}],"name":"CountEvent","type":"event"}],'TLWHbu4BBaJEwCGUyQQHiqQguYB9tsi8Mo');
+/**
+ *     2.3 Tronex testnet listener demo
+ */
 
-
-// let mainEventListener = ()=>{
-//   wink["Transfer(address,address,uint256)"]().watch((err, event) => {
-//     if (err) return console.error('Error with "method" event:', err);
-//     if (event) { // some function
-//       console.log("main chain event begin:");
-//       console.log(event);
-//       console.log("main chain event end");
-//       console.log();
-//     }
-//   });
-//   // mainTest0114["CountEvent(address,uint256)"]().watch((err, event) => {
-//   //   if (err) return console.error('Error with "method" event:', err);
-//   //   if (event) { // some function
-//   //     console.log("main chain event begin:");
-//   //     console.log(event);
-//   //     console.log("main chain event end");
-//   //     console.log();
-//   //   }
-//   // });
-// }
-
-//mainEventListener();
-
-// console.log(test0114)
-let sideEventListener = ()=>{
+let tronexDappchainEventListener = ()=>{
   try {
-    console.log("sidechain heartbeat")
-    // console.log(test0114);
+    console.log('**********')
+    console.log('dappchain tronex listen task starts...',
+    '\nPlease send transactions to trigger events for test using sun-cli cmd: triggercontract TGYpJsuRi8oTNEpNwyV5gVHHStoAUM7euA hello() # false 10000000 0 0 #')
+    console.log('Will consume test coin')
+    console.log('**********')
     test0114["CountEvent(address,uint256)"]().watch((err, event) => {
-      // if (err) return console.error('Error with "method" event:', err);
-      // if (event) { // some function
-      //   console.log("side chain event begin:");
-      //   console.log(event);
-      //   console.log("side chain event end");
-      //   console.log();
-      // }
+      if (err) return console.error('Error with "method" event:', err);
+      if (event) { // some function
+        console.log("dappchain tronex event begin:");
+        console.log(event);
+        console.log("dappchain tronex event end");
+        console.log();
+      }
     });
   }
   catch(err){
-    console.log(err, 'errrrrr')
+    console.log(err, 'err')
   }
   
 }
 
-sideEventListener();
+tronexDappchainEventListener();
+
+/**
+ *   3 Fullnode api test
+ */
+
+tronexTestnet.sidechain.trx.getChainParameters().then(
+  result=>console.log('\n**********Tronex fullnode api test getChainParameters() begin:**********\n', 
+  result, '\n**********Tronex fullnode api test getChainParameters() end.**********\n'))
+
+module.exports = app;
