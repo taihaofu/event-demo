@@ -3,7 +3,8 @@ var app = express();
 const TronWeb = require('tronweb');
 const SunWeb = require('sunweb');
 
-const privatekey = '7306c6044ad7c03709980aa188b8555288b7e0608f5edbf76ff2381c5a7a15a8';
+// You don't need to give a privatekey for this demo, unless you want to send transactions.
+const privatekey = ''; 
 
 /**
  *    ********* 1 TRON Mainnet ************
@@ -23,9 +24,10 @@ const tron = new TronWeb( {
 const dappChain = new TronWeb({
   fullNode: 'https://sun.tronex.io',
   solidityNode: 'https://sun.tronex.io',
-  eventServer: 'https://sun.tronex.io/event',
+  eventServer: 'https://sun.tronex.io',
   privateKey: privatekey
 })
+
 const tronMainnet =  new SunWeb(
   tron,
   dappChain,
@@ -46,14 +48,14 @@ const tronMainnet =  new SunWeb(
 
 let mainEventListener = ()=>{
   console.log('**********')
-  console.log('mainchain listen task starts...\nautomatically listens to wink event')
+  console.log('TRON mannet listen task starts...\nautomatically listens to wink event')
   console.log('**********')
   wink["Transfer(address,address,uint256)"]().watch((err, event) => {
     if (err) return console.error('Error with "method" event:', err);
     if (event) { // some function
-      console.log("main chain event begin:");
+      console.log("TRON mannet event begin:");
       console.log(event);
-      console.log("main chain event end");
+      console.log("TRON mannet event end");
       console.log();
     }
   });
@@ -65,6 +67,26 @@ mainEventListener();
  *   NOTE: I didn't implement DAppChain listener on TRON Mainnet here. You should implement this sidechain
  *   listener or dappchain listener yourself in your dappchain product evironment.
  */
+
+const test0120 = tronMainnet.sidechain.contract([{"constant":false,"inputs":[],"name":"hello","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":false,"name":"_value","type":"uint256"}],"name":"CountEvent","type":"event"}],'TEkgV673Vzwk1s24F5iXXh8hsn5LQ1h7p8');
+
+let dappchainEventListener = ()=>{
+  console.log('**********')
+  console.log('dappchain listen task starts...\nPlease send transactions to trigger events for test using sun-cli cmd: triggercontract TEkgV673Vzwk1s24F5iXXh8hsn5LQ1h7p8 hello() # false 10000000 0 0 #')
+  console.log('ATTENTION: REAL TRX IS REQUIRED WITH THIS CMD!!!!')
+  console.log('**********')
+  test0120["CountEvent(address,uint256)"]().watch((err, event) => {
+    if (err) return console.error('Error with "method" event:', err);
+    if (event) { // some function
+      console.log("dappchain mainnet event begin:");
+      console.log(event);
+      console.log("dappchain mainnet event end");
+      console.log();
+    }
+  });
+}
+
+dappchainEventListener();
 
 
 /**
@@ -99,24 +121,23 @@ const test0114 = tronexTestnet.sidechain.contract([{"constant":false,"inputs":[]
 //TNbft6FbEKNZSfvEhVtcfdwKFneVmgga7V  mainnet sunnetwork test contract
 //TGYpJsuRi8oTNEpNwyV5gVHHStoAUM7euA  tronex sunnetwork test contract
 
-// const mainTest0114 = tronweb.contract([{"constant":false,"inputs":[],"name":"hello","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":false,"name":"_value","type":"uint256"}],"name":"CountEvent","type":"event"}],'TLWHbu4BBaJEwCGUyQQHiqQguYB9tsi8Mo');
-
 /**
  *     2.3 Tronex testnet listener demo
  */
 
-let sideEventListener = ()=>{
+let tronexDappchainEventListener = ()=>{
   try {
     console.log('**********')
-    console.log('sidechain listen task starts...',
+    console.log('dappchain tronex listen task starts...',
     '\nPlease send transactions to trigger events for test using sun-cli cmd: triggercontract TGYpJsuRi8oTNEpNwyV5gVHHStoAUM7euA hello() # false 10000000 0 0 #')
+    console.log('Will consume test coin')
     console.log('**********')
     test0114["CountEvent(address,uint256)"]().watch((err, event) => {
       if (err) return console.error('Error with "method" event:', err);
       if (event) { // some function
-        console.log("side chain event begin:");
+        console.log("dappchain tronex event begin:");
         console.log(event);
-        console.log("side chain event end");
+        console.log("dappchain tronex event end");
         console.log();
       }
     });
@@ -127,7 +148,7 @@ let sideEventListener = ()=>{
   
 }
 
-sideEventListener();
+tronexDappchainEventListener();
 
 /**
  *   3 Fullnode api test
