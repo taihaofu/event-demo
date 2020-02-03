@@ -64,8 +64,7 @@ let mainEventListener = ()=>{
 mainEventListener();
 
 /**
- *   NOTE: I didn't implement DAppChain listener on TRON Mainnet here. You should implement this sidechain
- *   listener or dappchain listener yourself in your dappchain product evironment.
+ *   1.4 DAppChain contract & listener.
  */
 
 const test0120 = tronMainnet.sidechain.contract([{"constant":false,"inputs":[],"name":"hello","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":false,"name":"_value","type":"uint256"}],"name":"CountEvent","type":"event"}],'TEkgV673Vzwk1s24F5iXXh8hsn5LQ1h7p8');
@@ -91,7 +90,7 @@ dappchainEventListener();
 
 /**
  *    ********* 2 Tronex testnet ********* 
- *    Below are testnet!!!!! Should only be used as test environment. I didn't implement
+ *    Below are testnet!!!!! Should only be used as test environment. Only a demo for Tronex DAppChain(Not Tronex itself).
  */
 
  /**
@@ -122,7 +121,7 @@ const test0114 = tronexTestnet.sidechain.contract([{"constant":false,"inputs":[]
 //TGYpJsuRi8oTNEpNwyV5gVHHStoAUM7euA  tronex sunnetwork test contract
 
 /**
- *     2.3 Tronex testnet listener demo
+ *     2.3 Tronex testnet DAppChain listener demo
  */
 
 let tronexDappchainEventListener = ()=>{
