@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Tronlink subweb监听事件</title>
+</head>
+<body>
+    <script>
+//TEkgV673Vzwk1s24F5iXXh8hsn5LQ1h7p8  DAppChain contract
+//TGYpJsuRi8oTNEpNwyV5gVHHStoAUM7euA  tronex sunnetwork test contract
+        async function triggercontract(){
+            try {
+                console.log("start")
+                let instance = await window.sunWeb.sidechain.contract().at('TGYpJsuRi8oTNEpNwyV5gVHHStoAUM7euA');
+                console.log(instance);
+                instance["CountEvent(address,uint256)"]().watch((err, eventResult) => {
+                    if (err) {
+                        return console.error('Error with "method" event:', err);
+                    }
+                    if (eventResult) { 
+                        console.log('eventResult:',eventResult);
+                    }
+                });
+
+                let res = await instance.hello().send({
+                    feeLimit:100000000,
+                    callValue:0,
+                    shouldPollResponse:true
+                });
+                console.log(res);
+
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        var judge = setInterval(function(){
+            if(window.tronWeb) {
+                clearInterval(judge);
+                triggercontract();
+            }
+        },500)
+
+    </script>
+</body>
+</html>
